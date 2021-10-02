@@ -1,0 +1,125 @@
+﻿@model Task.Core.ViewModel.ExpenseDto
+
+@{
+    ViewData["Title"] = "Personal Expense Manager";
+}
+<link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<script src="~/Scripts/bootstrap.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/js/bootstrap-datepicker.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/css/bootstrap-datepicker.css" rel="stylesheet">
+
+<h2>Personal Expense Manager</h2>
+<br />
+<div>
+    <div style="float:left">
+        <button class="btn btn-primary" onclick="AddEditExpenses(0)">Add Expense</button>
+        
+    </div>
+    <div style="float:right; width:40%;">
+        
+            @using (Html.BeginForm("Index", "Expense", FormMethod.Get,new { @class="form-group"}))
+            {
+                <div class="col-sm-6">
+                    <input class="form-control" type="text" name="SearchString" placeholder="Search">
+                </div>
+                <button type="submit" class="btn btn-default btn-info">Filter</button>
+            }
+    </div>
+</div>
+<br />
+<br />
+<table class="table">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Fees</th>
+            <th>Date</th>
+            <th>Note</th>
+            <th>Action Item</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{ int index = 0;} 
+        @foreach (var item in Model.Expenses)
+        {
+            <tr>
+                <td>@(index+1)</td>
+                <td>@Html.DisplayFor(modelItem => item.ItemName)</td>
+                <td>@Html.DisplayFor(modelItem => item.Fees)</td>
+                <td>@Html.DisplayFor(modelItem => item.ExpenseDate)</td>
+                <td>@Html.DisplayFor(modelItem => item.Note)</td>
+                <td>
+                    <button class="btn btn-default" onclick="AddEditExpenses(@item.ItemId)">Edit</button>
+                    <button class="btn btn-danger" onclick="DeleteExpense(@item.ItemId)">Delete</button>
+                </td>
+            </tr>
+        }
+        <tr>
+            <td class="bg-success text-success">Total</td>
+            <td></td>
+            <td class="text-info bg-primary">@Model.Total</td>
+        </tr>
+    </tbody>
+</table>
+<div class="modal fade" id="expenseFormModel" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <a href="#" class="close" data-dismiss="modal">&times;</a>
+                <h3 id="title" class="modal-title">Add Expense</h3>
+            </div>
+            <div class="modal-body" id="expenseFormModelDiv">
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var AddEditExpenses = function (itemId) {
+        var url = "/Expense/AddEditExpenses?itemId=" + itemId;
+        if (itemId > 0)
+            $('#title').html("Edit Expense");
+        $("#expenseFormModelDiv").load(url, function () {
+            $("#expenseFormModel").modal("show");
+        });
+        $('#expenseFormModel').on('shown.bs.modal', function () {
+            $('#calender-container .input-group.date').datepicker({
+                todayBtn: true,
+                calendarWeeks: true,
+                todayHighlight: true,
+                autoclose: true,
+                container: '#expenseFormModel modal-body'
+            });
+        });
+    }
+    var DeleteExpense = function (itemId) {
+        var ans = confirm("Do you want to delete item with Item Id: " + itemId);
+        if (ans) {
+            $.ajax({
+                type: "POST",
+                url: "/Expense/Delete/" + itemId,
+                success: function () {
+                    window.location.href = "/Expense/Index";
+                }
+            })
+        }
+    }
+</script>
+<script>
+    $('body').on('click', "#btnSubmit", function () {
+        var myformdata = $("#expenseForm").serialize();
+        $.ajax({
+            type: "POST",
+            url: "/Expense/Create",
+            data: myformdata,
+            success: function () {
+                $("#myModal").modal("hide");
+                window.location.href = "/Expense/Index";
+            },
+            error: function (errormessage) {
+                alert(errormessage.responseText);
+            }
+        })
+    });
+</script>

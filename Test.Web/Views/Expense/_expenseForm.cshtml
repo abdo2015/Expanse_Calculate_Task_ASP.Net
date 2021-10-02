@@ -1,0 +1,39 @@
+﻿
+@model Task.Core.Models.Expense
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/css/bootstrap-datepicker.css" rel="stylesheet">
+
+<div>
+    <div class="row">
+        <div class="col-md-8">
+            <form id="expenseForm">
+                <input type="hidden" asp-for="ItemId" />
+                <div class="form-group">
+                    @Html.TextBoxFor(m => m.ItemId ,new { @type= "hidden" })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.ItemName)
+                    @Html.TextBoxFor(m => m.ItemName, new { @class = "form-control" })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Fees)
+                    @Html.TextBoxFor(m => m.Fees, new { @class = "form-control" })
+                </div>
+                <div class="form-group" id="calender-container">
+                    @Html.LabelFor(m => m.ExpenseDate)
+                    <div class="input-group date">
+                        <input value="@Model.ExpenseDate" type="text" class="form-control"><span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Note)
+                    @Html.TextBoxFor(m => m.Note, new { @class = "form-control" })
+                </div>
+                <div class="form-group">
+                    <button type="button" id="btnSubmit" class="btn btn-block btn-info">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
