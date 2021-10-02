@@ -15,10 +15,12 @@
                 <div class="form-group">
                     @Html.LabelFor(m => m.ItemName)
                     @Html.TextBoxFor(m => m.ItemName, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m=>m.ItemName)
                 </div>
                 <div class="form-group">
                     @Html.LabelFor(m => m.Fees)
                     @Html.TextBoxFor(m => m.Fees, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.Fees)
                 </div>
                 <div class="form-group" id="calender-container">
                     @Html.LabelFor(m => m.ExpenseDate)
@@ -29,6 +31,7 @@
                 <div class="form-group">
                     @Html.LabelFor(m => m.Note)
                     @Html.TextBoxFor(m => m.Note, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.Note)
                 </div>
                 <div class="form-group">
                     <button type="button" id="btnSubmit" class="btn btn-block btn-info">Save</button>
